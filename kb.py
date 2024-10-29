@@ -87,7 +87,7 @@ def inline_create_group_kb() -> InlineKeyboardMarkup:
 
 def inline_add_group_kb() -> InlineKeyboardMarkup:
 
-    kb = [[InlineKeyboardButton(text="Добавить папку для группы (пришлите ссылку на папку группы)", callback_data="add")]]
+    kb = [[InlineKeyboardButton(text="Прислать ссылку на папку", callback_data="add")]]
 
     return InlineKeyboardMarkup(inline_keyboard=kb, resize_keyboard=True, row_width=1)
 

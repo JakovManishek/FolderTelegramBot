@@ -141,7 +141,7 @@ async def help(message: Message):
 @dp.message(Command('group_folder'))
 async def group_folder(message: Message):
     if message.chat.type == "private":
-        await message.answer(text=text.add_group_folder_instruction, reply_markup=kb.inline_create_group_kb())
+        await message.answer(text=text.create_group_folder_instruction, reply_markup=kb.inline_create_group_kb())
 
 
 @dp.message(Command('made_by'))
@@ -184,12 +184,21 @@ async def inline_callback(callback: CallbackQuery, state: FSMContext):
             await callback.answer()
             await state.set_state(OrderAdd.new_vertices)
             await state.update_data(cnt=1)
-            await callback.message.answer(text=text.add_vertex_text, reply_markup=kb.reply_media_group_kb())
 
-            if chat_type != "private" or private_mode == 2:
+            if chat_type != "private":
+                await callback.message.answer(text=text.add_group_link)
+                await state.update_data(for_what="group")
+            elif private_mode == 2:
+                await callback.message.answer(text=text.add_vertex_text, reply_markup=kb.reply_media_group_kb())
                 await state.update_data(for_what="group")
             else:
+                await callback.message.answer(text=text.add_vertex_text, reply_markup=kb.reply_media_group_kb())
                 await state.update_data(for_what="bot")
+
+            # if chat_type != "private" or private_mode == 2:
+            #     await state.update_data(for_what="group")
+            # else:
+            #     await state.update_data(for_what="bot")
 
         case 'delete':
             await callback.answer()
@@ -239,7 +248,7 @@ async def inline_callback(callback: CallbackQuery, state: FSMContext):
         case "group_folder":
             await callback.answer()
 
-            await callback.message.answer(text=text.create_group_folder_instruction)
+            await callback.message.answer(text=text.add_group_folder)
             await state.set_state(OrderAdd.new_vertices)
             await state.update_data(for_what="group")
 
